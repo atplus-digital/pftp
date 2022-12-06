@@ -10,6 +10,11 @@
   
 # Quickstart
 
+## Clone repository
+
+```console
+git clone https://github.com/atplus-digital/pftp.git && cd pftp
+```
 
 ## Generate SSL certificate to want to use FTPS
 
