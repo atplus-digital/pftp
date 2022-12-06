@@ -15,7 +15,7 @@ services:
     restart: "always"
   pure-ftpd-mysql-dev:
     container_name: "pure-ftpd-mysql"
-    image: "registry.k8s.lgs.atplus.cloud/pftp/pftp-pureftpd"
+    image: "atplusdigital/pftp-pureftpd"
     ports:
       - "20-21:20-21"
       - "30000-30009:30000-30009"
