@@ -28,3 +28,6 @@ mkdir cert && openssl req -x509 -nodes -newkey rsa:2048 -keyout cert/pure-ftpd.p
 docker-compose up -d
 ```
 
+# Supported languages  :
+  * Portuguese (PT-BR) 🇧🇷
+  * English (en) 🇺🇸 (Coming soon)
