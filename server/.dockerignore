@@ -1,0 +1,10 @@
+node_modules
+npm-debug.log
+.env
+Dockerfile
+README.md
+.gitignore
+.dockerignore
+nodemon.json
+.DS_Store
+babel.config.js

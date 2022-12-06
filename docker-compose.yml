@@ -1,0 +1,100 @@
+version: '3'
+services:
+  traefik:
+    image: "traefik:v2.8"
+    container_name: "traefik"
+    command:
+      #- "--log.level=DEBUG"
+      - "--api.insecure=false"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
+        #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.myresolver.acme.email=$LETSENCRYPT_MAIL"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "letsencrypt:/letsencrypt"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    restart: "always"
+  mysql:
+    image: mariadb
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=$MYSQL_PASSWORD
+      - MYSQL_PASSWORD=$MYSQL_PASSWORD
+      - MYSQL_USER=$MYSQL_USER
+      - MYSQL_DATABASE=$MYSQL_DATABASE
+    volumes:
+      - ./docker/mysql/pureftp.sql:/docker-entrypoint-initdb.d/pureftp.sql
+      - db_data:/var/lib/mysql
+    restart: "always"
+  pure-ftpd-mysql:
+    container_name: "pure-ftpd-mysql"
+    image: "registry.k8s.lgs.atplus.cloud/pftp/pftp-pureftpd"
+    ports:
+      - "20-21:20-21"
+      - "30000-30009:30000-30009"
+    volumes:
+      - "./cert/pure-ftpd.pem:/etc/ssl/private/imported.pem:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+      - ftp_data:/ftpdata
+    environment:
+      - "EXTERNAL_IP=$EXTERNAL_IP"
+      - "MYSQL_HOST=$MYSQL_HOST"
+      - "MYSQL_PORT=$MYSQL_PORT"
+      - "MYSQL_USER=$MYSQL_USER"
+      - "MYSQL_PASSWORD=$MYSQL_PASSWORD"
+      - "MYSQL_DATABASE=$MYSQL_DATABASE"
+    depends_on:
+      - mysql
+    restart: "always"
+  pftp-backend:
+    container_name: pftp-backend
+    image: registry.k8s.lgs.atplus.cloud/pftp/pftp-backend
+    environment:
+      - MYSQL_HOST=$MYSQL_HOST
+      - MYSQL_PORT=$MYSQL_PORT
+      - MYSQL_USER=$MYSQL_USER
+      - MYSQL_PASSWORD=$MYSQL_PASSWORD
+      - MYSQL_DATABASE=$MYSQL_DATABASE
+      - ADMIN_PASSWORD=$ADMIN_PASSWORD
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=(Host(`$DOMAIN_SERVER`) && PathPrefix(`/api`))"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls.certresolver=myresolver"
+    depends_on:
+      - pure-ftpd-mysql
+      - traefik
+    volumes:
+      - ftp_data:/ftpdata
+    restart: "always"
+  pftp-frontend:
+    container_name: pftp-frontend
+    image: registry.k8s.lgs.atplus.cloud/pftp/pftp-frontend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=(Host(`$DOMAIN_SERVER`) && PathPrefix(`/`))"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.tls.certresolver=myresolver"
+    depends_on:
+      - pftp-backend
+      - traefik
+    restart: "always"
+volumes:
+  db_data:
+  ftp_data:
+  letsencrypt:
+  
+
+
+

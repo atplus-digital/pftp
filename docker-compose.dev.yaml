@@ -1,0 +1,61 @@
+version: '3'
+services:
+  mysql-dev:
+    image: mariadb
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=$MYSQL_PASSWORD
+      - MYSQL_PASSWORD=$MYSQL_PASSWORD
+      - MYSQL_USER=$MYSQL_USER
+      - MYSQL_DATABASE=$MYSQL_DATABASE
+    volumes:
+      - ./docker/mysql/pureftp.sql:/docker-entrypoint-initdb.d/pureftp.sql
+      - db_data:/var/lib/mysql
+    restart: "always"
+  pure-ftpd-mysql-dev:
+    container_name: "pure-ftpd-mysql"
+    image: "registry.k8s.lgs.atplus.cloud/pftp/pftp-pureftpd"
+    ports:
+      - "20-21:20-21"
+      - "30000-30009:30000-30009"
+    volumes:
+      - "./cert/pure-ftpd.pem:/etc/ssl/private/imported.pem:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+      - ./data:/ftpdata
+    environment:
+      - "EXTERNAL_IP=$EXTERNAL_IP"
+      - "MYSQL_HOST=$MYSQL_HOST"
+      - "MYSQL_PORT=$MYSQL_PORT"
+      - "MYSQL_USER=$MYSQL_USER"
+      - "MYSQL_PASSWORD=$MYSQL_PASSWORD"
+      - "MYSQL_DATABASE=$MYSQL_DATABASE"
+    depends_on:
+      - mysql-dev
+    restart: "always"
+  pftp-frontend-dev:
+    container_name: pftp-frontend-dev
+    image: node:16-alpine
+    command:  npm start
+    working_dir: /app
+    volumes:
+      - ./web:/app:rw
+    ports:
+      - 3000:3000
+  pftp-backend-dev:
+    container_name: pftp-backend-dev
+    image: node:16.17-alpine3.15
+    command:  npm run dev
+    working_dir: /app
+    volumes:
+      - ./data:/ftpdata
+      - ./server:/app
+    ports:
+      - 3001:3001
+volumes:
+  db_data:
+  #ftp_data:
+  
+
+
+

@@ -1,0 +1,36 @@
+{
+	"name": "server",
+	"version": "1.0.0",
+	"main": "index.js",
+	"license": "MIT",
+	"scripts": {
+		"start": "sucrase-node src/index.js",
+		"dev": "nodemon src/index.js",
+		"test": "jest ",
+		"test:docker": "docker-compose -f ../docker-compose.dev.yaml run --rm  pftp-backend-dev npm run test",
+		"dev:docker": "docker-compose -f ../docker-compose.dev.yaml up pftp-backend-dev",
+		"build": "babel src -d build --transforms javascript,imports"
+	},
+	"dependencies": {
+		"cors": "^2.8.5",
+		"crypto": "^1.0.1",
+		"dotenv": "^16.0.0",
+		"express": "^4.17.3",
+		"fast-folder-size": "^1.7.1",
+		"jsonwebtoken": "^8.5.1",
+		"md5": "^2.3.0",
+		"mysql2": "^2.3.3",
+		"pino": "^7.10.0",
+		"pino-pretty": "^7.6.1",
+		"sequelize": "^6.23.0",
+		"sucrase": "^3.21.0",
+		"systeminformation": "^5.12.7"
+	},
+	"devDependencies": {
+		"@babel/preset-env": "^7.20.2",
+		"babel-jest": "^29.3.1",
+		"jest": "^29.3.1",
+		"jest-junit": "^15.0.0",
+		"nodemon": "^2.0.15"
+	}
+}

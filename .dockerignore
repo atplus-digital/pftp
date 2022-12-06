@@ -1,0 +1,8 @@
+web/node_modules
+web/npm-debug.log
+web/.env
+web/Dockerfile
+web/README.md
+web/.gitignore
+web/.dockerignore
+web/nodemon.json
