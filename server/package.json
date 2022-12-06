@@ -9,7 +9,7 @@
 		"test": "jest ",
 		"test:docker": "docker-compose -f ../docker-compose.dev.yaml run --rm  pftp-backend-dev npm run test",
 		"dev:docker": "docker-compose -f ../docker-compose.dev.yaml up pftp-backend-dev",
-		"build": "babel src -d build --transforms javascript,imports"
+		"build": "babel src -d build "
 	},
 	"dependencies": {
 		"cors": "^2.8.5",
@@ -27,6 +27,8 @@
 		"systeminformation": "^5.12.7"
 	},
 	"devDependencies": {
+		"@babel/cli": "^7.19.3",
+		"@babel/core": "^7.20.5",
 		"@babel/preset-env": "^7.20.2",
 		"babel-jest": "^29.3.1",
 		"jest": "^29.3.1",
