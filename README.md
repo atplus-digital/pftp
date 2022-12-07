@@ -22,6 +22,24 @@ git clone https://github.com/atplus-digital/pftp.git && cd pftp
 mkdir cert && openssl req -x509 -nodes -newkey rsa:2048 -keyout cert/pure-ftpd.pem -out cert/pure-ftpd.pem -days 3650 
 ```
 
+## Change the environment variables
+
+```console
+mv .env.example .env
+```
+
+```console
+EXTERNAL_IP=        External IP address
+MYSQL_HOST=         Database server host
+MYSQL_PORT=         Database server port
+MYSQL_USER=         Database User
+MYSQL_PASSWORD=     Database Password
+MYSQL_DATABASE=     Database name
+ADMIN_PASSWORD=     Admin password
+LETSENCRYPT_MAIL=   Email for SSL certificate generation
+DOMAIN_SERVER=      Domain name 
+```
+
 ## Running Application with docker-compose
 
 ```console
