@@ -4,7 +4,7 @@
 	"main": "index.js",
 	"license": "MIT",
 	"scripts": {
-		"start": "sucrase-node src/index.js",
+		"start": "node index.js",
 		"dev": "nodemon src/index.js",
 		"test": "jest ",
 		"test:docker": "docker-compose -f ../docker-compose.dev.yaml run --rm  pftp-backend-dev npm run test",
