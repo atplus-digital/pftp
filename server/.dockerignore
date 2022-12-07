@@ -7,4 +7,4 @@ README.md
 .dockerignore
 nodemon.json
 .DS_Store
-babel.config.js
+#babel.config.js
