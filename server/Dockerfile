@@ -8,7 +8,7 @@ COPY . .
 
 RUN npm install 
 
-RUN npm run build
+RUN npm run build && rm -fr src
 
 EXPOSE 3000
 
