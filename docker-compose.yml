@@ -39,7 +39,7 @@ services:
     restart: "always"
   pure-ftpd-mysql:
     container_name: "pure-ftpd-mysql"
-    image: "registry.k8s.lgs.atplus.cloud/pftp/pftp-pureftpd"
+    image: "atplusdigital/pftp-pureftpd"
     ports:
       - "20-21:20-21"
       - "30000-30009:30000-30009"
@@ -59,7 +59,7 @@ services:
     restart: "always"
   pftp-backend:
     container_name: pftp-backend
-    image: registry.k8s.lgs.atplus.cloud/pftp/pftp-backend
+    image: atplusdigital/pftp-backend
     environment:
       - MYSQL_HOST=$MYSQL_HOST
       - MYSQL_PORT=$MYSQL_PORT
@@ -80,7 +80,7 @@ services:
     restart: "always"
   pftp-frontend:
     container_name: pftp-frontend
-    image: registry.k8s.lgs.atplus.cloud/pftp/pftp-frontend
+    image: atplusdigital/pftp-frontend
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=(Host(`$DOMAIN_SERVER`) && PathPrefix(`/`))"
