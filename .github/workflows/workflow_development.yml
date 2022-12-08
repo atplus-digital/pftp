@@ -1,0 +1,30 @@
+
+name: Development
+
+on:
+  push:
+    branches: 
+      - "!main"
+
+jobs:
+  filter-paths:
+    runs-on: ubuntu-latest
+    outputs:
+      web: ${{ steps.on_changes.outputs.web }}
+      server: ${{ steps.on_changes.outputs.server }}
+      pureftpd: ${{ steps.on_changes.outputs.pureftpd }}
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: on_changes
+        with:
+          filters: |
+            web:
+              - 'web/**'
+              - 'docker/nginx/**'
+            server:
+              - 'server/**'
+            pureftpd:
+              - 'docker/pure-ftpd/**'
