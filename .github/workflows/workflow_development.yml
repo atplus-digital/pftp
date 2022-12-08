@@ -2,8 +2,14 @@
 name: Development
 
 on:
+  create:
+    branches:
+      - "!main"
   push:
     branches: 
+      - "!main"
+  pull_request:
+    branches:
       - "!main"
 
 jobs:
