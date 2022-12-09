@@ -34,6 +34,42 @@ jobs:
               - 'server/**'
             pureftpd:
               - 'docker/pure-ftpd/**'
+  Build-Frontend:
+    needs: [filter-paths]
+    if: ${{ needs.filter-paths.outputs.web == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+      -
+        # Add support for more platforms with QEMU (optional)
+        # https://github.com/docker/setup-qemu-action
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      -
+        name: Frontend Docker meta
+        id: frontend_meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ secrets.ATP_REGISTRY_URL }}/pftp/pftp-frontend
+          tags: ${{ env.GITHUB_REF_NAME }}
+      - name: Login Registry
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.ATP_REGISTRY_USERNAME }}
+          password: ${{ secrets.ATP_REGISTRY_PASSWORD }}
+      -
+        name: Build and push Frontend
+        uses: docker/build-push-action@v3
+        with:
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.frontend_meta.outputs.tags }}
+          file: web/Dockerfile
+          platforms: linux/amd64,linux/arm64
   Build-Backend:
     runs-on: ubuntu-latest
     needs: [filter-paths]
@@ -70,4 +106,50 @@ jobs:
           context: server
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.backend_meta.outputs.tags }}
+          platforms: linux/amd64,linux/arm64
+  Build-PureFTPD:
+    runs-on: ubuntu-latest
+    needs: [filter-paths]
+    if: ${{ needs.filter-paths.outputs.pureftpd == 'true' }}
+    steps:
+      - name: test ftp
+        run: echo ${{ needs.filter-paths.outputs.pureftpd}}
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+      -
+        # Add support for more platforms with QEMU (optional)
+        # https://github.com/docker/setup-qemu-action
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      -
+        name: PureFTPD Docker meta
+        id: pure_ftpd_meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ secrets.ATP_REGISTRY_URL }}/pftp/pftp-pureftpd
+          tags: ${{ env.GITHUB_REF_NAME }}
+      - name: Login Registry
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.ATP_REGISTRY_USERNAME }}
+          password: ${{ secrets.ATP_REGISTRY_PASSWORD }}
+      -
+        name: Build and push PureFTP
+        uses: docker/build-push-action@v3
+        with:
+          context: docker/pure-ftpd
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.pure_ftpd_meta.outputs.tags }}
+          platforms: linux/amd64,linux/arm64
+      -
+        name: Build and push Pure-FTPD
+        uses: docker/build-push-action@v3
+        with:
+          context: docker/pure-ftpd
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.pure_ftpd_meta.outputs.tags }}
           platforms: linux/amd64,linux/arm64
