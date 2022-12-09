@@ -56,7 +56,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: ${{ secrets.ATP_REGISTRY_URL }}/pftp/pftp-backend
-          tags: latest
+          tags: ${{ env.GITHUB_REF_NAME }}
       - name: Login Registry
         uses: docker/login-action@v2
         with:
