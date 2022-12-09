@@ -60,6 +60,7 @@ jobs:
       - name: Login Registry
         uses: docker/login-action@v2
         with:
+          registry: ${{ secrets.ATP_REGISTRY_URL }}
           username: ${{ secrets.ATP_REGISTRY_USERNAME }}
           password: ${{ secrets.ATP_REGISTRY_PASSWORD }}
       -
