@@ -10,7 +10,6 @@ services:
       - MYSQL_USER=$MYSQL_USER
       - MYSQL_DATABASE=$MYSQL_DATABASE
     volumes:
-      - ./docker/mysql/pureftp.sql:/docker-entrypoint-initdb.d/pureftp.sql
       - db_data:/var/lib/mysql
     restart: "always"
   pure-ftpd-mysql-dev:

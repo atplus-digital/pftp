@@ -7,6 +7,7 @@ import {routes} from "./routes"
 import serverLogInfo from "./logs/serverLogInfo"
 import serverLogError from "./logs/serverLogError"
 import Admin from './models/Admin'
+import FtpAccounts from "./models/FtpAccounts"
 
 const serverApp = express()
 
@@ -19,24 +20,29 @@ serverApp.listen(process.env.SERVER_LISTEN_PORT || 3000, () => {
 		serverLogInfo(`SERVER_LISTEN_PORT: ${process.env.SERVER_LISTEN_PORT}`)
 })
 
-Database.authenticate()
-	.then(() => {
-		serverLogInfo('Database successfully connected !!')
-		Admin.sync()
-			.then((info) => {
-				Admin.findOne({ where: { Username: 'admin' }})
-					.then((userAdmin) => {
-						if(!userAdmin){
-							Admin.create({ Username: 'admin', Password: md5(process.env.ADMIN_PASSWORD || 'admin' ) })
-							.then(() => {
-								serverLogInfo('User admin create')
-								serverLogInfo('Sync Complete')
-							})
-							.catch((e) => serverLogError(e.message) )
-						}
-					})
 
-			})
-		    .catch(e => console.log(e))
-	})
-	.catch(e => serverLogError(e.message))
+;
+(
+	async function InitialDatabaseHandler(){
+		try {
+			await Database.authenticate()
+			serverLogInfo('Database successfully connected !!')
+
+			await Admin.sync()
+
+			const UserAdminExist = await Admin.findOne({ where: { Username: 'admin' }})
+
+			if(!UserAdminExist){
+				await Admin.create({ Username: 'admin', Password: md5(process.env.ADMIN_PASSWORD || 'admin' ) })
+				serverLogInfo('User admin create')
+			}
+
+			await FtpAccounts.sync()
+			
+
+		} catch (error) {
+			serverLogError(error)
+		} 
+	}
+)()
+

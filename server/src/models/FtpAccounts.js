@@ -4,33 +4,33 @@ import Database  from "../config/databaseConfig"
 
 const FtpAccounts = Database.define("ftpd", {
     User: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(30),
         allowNull: false,
         primaryKey: true,
         unique: true
     },
     status: {
-        type: DataTypes.ENUM,
-        values: [0,1],
+        type: DataTypes.ENUM("0","1"),
+        // values: [0,1],
         defaultValue: '1',
         allowNull: false
     },
     Password: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(64),
         allowNull: false
     },
     Uid: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(11),
         allowNull: false,
         defaultValue: 'ftpuser',
     },
     Gid: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(11),
         allowNull: false,
         defaultValue: 'ftpgroup',
     },
     Dir: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(250),
         allowNull: false,
         defaultValue: '/ftpdata/public',
     },
@@ -45,28 +45,30 @@ const FtpAccounts = Database.define("ftpd", {
         defaultValue: 0,
     },
     comment: {
-        type: DataTypes.TEXT,
+        type: DataTypes.TEXT('tiny'),
         allowNull: true
     },
     ipaccess: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(15),
         allowNull: false,
         defaultValue: '*',
     },
     QuotaSize: {
-        type: DataTypes.INTEGER(1),
+        type: DataTypes.INTEGER(10),
         allowNull: false,
         defaultValue: 0,
     },
     QuotaFiles: {
-        type: DataTypes.INTEGER(1),
+        type: DataTypes.INTEGER(11),
         allowNull: false,
         defaultValue: 0
     }
 },
 {
-    timestamps: false,
-    freezeTableName:true,
+    charset: 'utf8',
+    collate: 'utf8_general_ci',
+    // timestamps: false,
+    // freezeTableName:true,
     tableName: "ftpd"
 
 })
