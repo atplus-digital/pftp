@@ -2,8 +2,6 @@ version: '3'
 services:
   mysql-dev:
     image: mariadb
-    ports:
-      - 3306:3306
     environment:
       - MYSQL_ROOT_PASSWORD=$MYSQL_PASSWORD
       - MYSQL_PASSWORD=$MYSQL_PASSWORD
