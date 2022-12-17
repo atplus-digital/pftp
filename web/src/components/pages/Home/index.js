@@ -97,16 +97,14 @@ function Home(){
     return(
         <Container customClass="mt-2" >
             <TitlePage Title="Início" />
-            { ServerInfo && 
-            (
                 <div className='mt-4' >
                 <Container customClass='flex flex-wrap -mx-6' >
-                    <Card Title={ ServerInfo.DiskTotal  + " GB"}  Caption="Espaço Total" Color="bg-indigo-600" LoadingSkeleton={LoadingSkeletonState} />
-                    <Card Title={ ServerInfo.DiskUsage + " GB"}  Caption="Espaço Usado" Color="bg-blue-600" customSize="mt-6 sm:mt-0" LoadingSkeleton={LoadingSkeletonState} />
-                    <Card Title={ ServerInfo.DiskAvailable + " GB"}  Caption="Espaço Livre" Color="bg-red-600" customSize="mt-6 xl:mt-0" LoadingSkeleton={LoadingSkeletonState} />
+                    <Card Title={ ServerInfo?.DiskTotal  + " GB"}  Caption="Espaço Total" Color="bg-indigo-600" LoadingSkeleton={LoadingSkeletonState} />
+                    <Card Title={ ServerInfo?.DiskUsage + " GB"}  Caption="Espaço Usado" Color="bg-blue-600" customSize="mt-6 sm:mt-0" LoadingSkeleton={LoadingSkeletonState} />
+                    <Card Title={ ServerInfo?.DiskAvailable + " GB"}  Caption="Espaço Livre" Color="bg-red-600" customSize="mt-6 xl:mt-0" LoadingSkeleton={LoadingSkeletonState} />
                 </Container>
             </div>
-            )}
+            
             <Container customClass="flex flex-col mt-8" >
                 <Container customClass="py-2 -my-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8" >
                     <Container customClass="inline-block min-w-full overflow-hidden align-middle border  border-gray-300 shadow sm:rounded-lg">
