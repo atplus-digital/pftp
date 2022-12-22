@@ -50,18 +50,27 @@ ServerApi.listen(process.env.API_LISTEN_PORT || 3000, () => {
 // Graceful Shutdown 
 process.on('SIGTERM', () => {
     serverLogInfo('SIGTERM signal received.');
-    ServerApi.close(() => serverLogInfo("HTTP server closed"))
 	Database.close().then(info => serverLogInfo("Database connection closed"))
+    serverLogInfo("App Closing")
+	process.exit(0)
   });
 
-  process.on('SIGILL', () => {
-    serverLogInfo('SIGILL signal received.');
-    ServerApi.close(() => serverLogInfo("HTTP server closed"))
+process.on('SIGILL', () => {
+	serverLogInfo('SIGILL signal received.');
 	Database.close().then(info => serverLogInfo("Database connection closed"))
-  });
+	serverLogInfo("App Closing")
+	process.exit(0)
+});
 
-  process.on('SIGINT', () => {
-    serverLogInfo('SIGINT signal received.');
-    ServerApi.close(() => serverLogInfo("HTTP server closed"))
+process.on('SIGINT', () => {
+	serverLogInfo('SIGINT signal received.');
 	Database.close().then(info => serverLogInfo("Database connection closed"))
-  });
+	serverLogInfo("App Closing")
+	process.exit(0)
+});
+process.on('SIGHUP', () => {
+	serverLogInfo('SIGHUP signal received.');
+	Database.close().then(info => serverLogInfo("Database connection closed"))
+	serverLogInfo("App Closing")
+	process.exit(0)
+});
