@@ -16,8 +16,8 @@ serverApp.use(express.json())
 
 serverApp.use("/api",routes)
 
-serverApp.listen(process.env.SERVER_LISTEN_PORT || 3000, () => {
-		serverLogInfo(`SERVER_LISTEN_PORT: ${process.env.SERVER_LISTEN_PORT}`)
+serverApp.listen(process.env.API_LISTEN_PORT || 3000, () => {
+		serverLogInfo(`API_LISTEN_PORT: ${process.env.API_LISTEN_PORT}`)
 })
 
 
