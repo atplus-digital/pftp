@@ -49,4 +49,7 @@ COPY --from=backend-builder ./backend/ /app/backend
 EXPOSE $PORT
 
 ENTRYPOINT [ "/docker-entrypoint.sh"]
-CMD ["npm", "start", "--prefix", "backend/"]
+
+STOPSIGNAL SIGILL
+
+CMD ["node", "backend/build/index.js"]
