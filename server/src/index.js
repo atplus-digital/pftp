@@ -9,18 +9,19 @@ import serverLogError from "./logs/serverLogError"
 import Admin from './models/Admin'
 import FtpAccounts from "./models/FtpAccounts"
 
-const serverApp = express()
 
-serverApp.use(cors())
-serverApp.use(express.json())
+// Server API
+const ServerApi = express()
+ServerApi.use(cors())
+ServerApi.use(express.json())
 
-serverApp.use("/api",routes)
+ServerApi.use("/api",routes)
 
-serverApp.listen(process.env.API_LISTEN_PORT || 3000, () => {
+ServerApi.listen(process.env.API_LISTEN_PORT || 3000, () => {
 		serverLogInfo(`API_LISTEN_PORT: ${process.env.API_LISTEN_PORT}`)
 })
 
-
+// Initial Database
 ;
 (
 	async function InitialDatabaseHandler(){
@@ -46,3 +47,21 @@ serverApp.listen(process.env.API_LISTEN_PORT || 3000, () => {
 	}
 )()
 
+// Graceful Shutdown 
+process.on('SIGTERM', () => {
+    serverLogInfo('SIGTERM signal received.');
+    ServerApi.close(() => serverLogInfo("HTTP server closed"))
+	Database.close().then(info => serverLogInfo("Database connection closed"))
+  });
+
+  process.on('SIGILL', () => {
+    serverLogInfo('SIGILL signal received.');
+    ServerApi.close(() => serverLogInfo("HTTP server closed"))
+	Database.close().then(info => serverLogInfo("Database connection closed"))
+  });
+
+  process.on('SIGINT', () => {
+    serverLogInfo('SIGINT signal received.');
+    ServerApi.close(() => serverLogInfo("HTTP server closed"))
+	Database.close().then(info => serverLogInfo("Database connection closed"))
+  });
