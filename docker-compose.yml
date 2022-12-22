@@ -56,9 +56,9 @@ services:
     depends_on:
       - mysql
     restart: "always"
-  pftp-backend:
-    container_name: pftp-backend
-    image: atplusdigital/pftp-backend
+  pftp:
+    container_name: pftp
+    image: atplusdigital/pftp
     environment:
       - MYSQL_HOST=$MYSQL_HOST
       - MYSQL_PORT=$MYSQL_PORT
@@ -68,7 +68,7 @@ services:
       - ADMIN_PASSWORD=$ADMIN_PASSWORD
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=(Host(`$DOMAIN_SERVER`) && PathPrefix(`/api`))"
+      - "traefik.http.routers.backend.rule=(Host(`$DOMAIN_SERVER`))"
       - "traefik.http.routers.backend.entrypoints=websecure"
       - "traefik.http.routers.backend.tls.certresolver=myresolver"
     depends_on:
@@ -77,23 +77,10 @@ services:
     volumes:
       - ftp_data:/ftpdata
     restart: "always"
-  pftp-frontend:
-    container_name: pftp-frontend
-    image: atplusdigital/pftp-frontend
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=(Host(`$DOMAIN_SERVER`) && PathPrefix(`/`))"
-      - "traefik.http.routers.frontend.entrypoints=websecure"
-      - "traefik.http.routers.frontend.tls.certresolver=myresolver"
-    depends_on:
-      - pftp-backend
-      - traefik
-    restart: "always"
 volumes:
   db_data:
   ftp_data:
   letsencrypt:
   
-
 
 
