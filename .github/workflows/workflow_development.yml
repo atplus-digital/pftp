@@ -6,17 +6,17 @@ on:
     branches:
       - "!main"
     tags-ignore:
-      - "v*"
+      - v*
   push:
     branches-ignore:
       - main
     tags-ignore:
-      - "v*"
+      - v*
   pull_request:
     branches:
       - "!main"
     tags-ignore:
-      - "v*"
+      - v*
 
 jobs:
   filter-paths:
