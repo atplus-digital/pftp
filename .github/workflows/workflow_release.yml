@@ -33,7 +33,6 @@ jobs:
               - 'docker/pure-ftpd/**'
   Build-PFTP:
     needs: [filter-paths]
-    if: ${{ needs.filter-paths.outputs.pftp == 'true' }}
     runs-on: ubuntu-latest
     steps:
       -
@@ -69,8 +68,8 @@ jobs:
           platforms: linux/amd64,linux/arm64
   Build-Frontend:
     needs: [filter-paths]
-    if: ${{ needs.filter-paths.outputs.web == 'true' }}
     runs-on: ubuntu-latest
+    if: ${{ needs.filter-paths.outputs.web == 'true' }}
     steps:
       -
         name: Checkout
