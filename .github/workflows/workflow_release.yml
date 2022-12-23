@@ -1,0 +1,14 @@
+name: Release
+
+on:
+  create:
+    tags:
+      - v*
+
+jobs:
+  test-job:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo ${{ env.GITHUB_REF_NAME }} 
+      - run: echo ${{ env.GITHUB_REF_NAME }} 
+
