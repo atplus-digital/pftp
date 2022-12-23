@@ -3,8 +3,8 @@ name: Development
 
 on:
   create:
-    branches:
-      - "!main"
+    branches-ignore:
+      - main
     tags-ignore:
       - '**'
   push:
@@ -13,8 +13,8 @@ on:
     tags-ignore:
       - '**'
   pull_request:
-    branches:
-      - "!main"
+    branches-ignore:
+      - main
     tags-ignore:
       - '**'
 
