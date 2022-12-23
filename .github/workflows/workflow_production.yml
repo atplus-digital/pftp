@@ -21,6 +21,10 @@ jobs:
         id: on_changes
         with:
           filters: |
+            pftp:
+              - 'web/**'
+              - 'server/**'
+              - 'docker/pftp/**'
             web:
               - 'web/**'
               - 'docker/nginx/**'
@@ -28,6 +32,42 @@ jobs:
               - 'server/**'
             pureftpd:
               - 'docker/pure-ftpd/**'
+  Build-PFTP:
+    needs: [filter-paths]
+    if: ${{ needs.filter-paths.outputs.pftp == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+      -
+        # Add support for more platforms with QEMU (optional)
+        # https://github.com/docker/setup-qemu-action
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      -
+        name: PFTP Docker meta
+        id: pftp_meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ secrets.DOCKERHUB_REPOSITORY }}/pftp
+          tags: latest
+      - name: Login Registry
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      -
+        name: Build and push PFTP
+        uses: docker/build-push-action@v3
+        with:
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.pftp_meta.outputs.tags }}
+          file: docker/pftp/Dockerfile
+          platforms: linux/amd64,linux/arm64
   Build-Frontend:
     needs: [filter-paths]
     if: ${{ needs.filter-paths.outputs.web == 'true' }}
