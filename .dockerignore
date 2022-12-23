@@ -6,3 +6,6 @@ web/README.md
 web/.gitignore
 web/.dockerignore
 web/nodemon.json
+server/Dockerfile
+server/.DS_Store
+server/.dockerignore
